@@ -37,9 +37,13 @@ const Home = () => {
       setSongs([]);
       setLyrics(song);
     } catch (err) {
-      const errMsg = "Soory coudn't find a data";
       setSongs([]);
+      setLyrics(null);
       setIsError(true);
+
+      setTimeout(() => {
+        setIsError(false);
+      }, 3000);
     }
   };
 
@@ -51,9 +55,15 @@ const Home = () => {
       const songs = data.data.data;
 
       console.log(songs[0].title, songs[0].id);
+      setLyrics([]);
       setSongs(songs);
     } catch (err) {
+      setLyrics(null);
       setIsError(true);
+
+      setTimeout(() => {
+        setIsError(false);
+      }, 3000);
     }
   };
 
