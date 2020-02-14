@@ -30,6 +30,10 @@
     margin: 40px auto;
     text-align: center;
 
+    input {
+      width: 300px;
+    }
+
     input,
     button {
       border: 1px solid #dedede;
@@ -63,4 +67,8 @@
   width: 80%;
   margin: 0 auto;
   padding: 100px;
+
+  @media (max-width: 600px) {
+    width: 100%;
+  }
 }

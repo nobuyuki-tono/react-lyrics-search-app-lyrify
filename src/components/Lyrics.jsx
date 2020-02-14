@@ -1,10 +1,12 @@
 import React from "react";
 
-const Lyrics = ({ lyrics }) => {
+import "../styles/Lyrics.scss";
+
+const Lyrics = ({ lyrics, songTitle }) => {
   return (
-    <div>
-      <p>{lyrics.lyrics}</p>
-      <h1>Helloo from Lyrics comp</h1>
+    <div className="lyrics">
+      <h1 className="lyrics-title">{songTitle}</h1>
+      <p className="lyrics-p">{lyrics.lyrics}</p>
     </div>
   );
 };

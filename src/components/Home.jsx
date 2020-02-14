@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import Song from "../components/Song";
 import Lyrics from "../components/Lyrics";
+import ShowError from "../components/ShowError";
 
 import "../styles/Home.scss";
 import axios from "axios";
@@ -11,7 +12,9 @@ const apiUrl = "https://api.lyrics.ovh";
 const Home = () => {
   const [input, setInput] = useState("");
   const [songs, setSongs] = useState([]);
+  const [songTitle, setSongTitle] = useState("");
   const [lyrics, setLyrics] = useState(null);
+  const [isError, setIsError] = useState(false);
 
   // useEffect(() => {
   //   async function getLyrics(input) {
@@ -26,21 +29,32 @@ const Home = () => {
   // }, []);
 
   const getSong = async (artist, title) => {
-    const data = await axios(`https://api.lyrics.ovh/v1/${artist}/${title}`);
-    const song = data.data;
-    console.log(song);
-    setSongs([]);
-    setLyrics(song);
+    try {
+      setSongTitle(title);
+      const data = await axios(`https://api.lyrics.ovh/v1/${artist}/${title}`);
+      const song = data.data;
+      console.log(song);
+      setSongs([]);
+      setLyrics(song);
+    } catch (err) {
+      const errMsg = "Soory coudn't find a data";
+      setSongs([]);
+      setIsError(true);
+    }
   };
 
   const getLyrics = async input => {
-    const searchTerm = input.trim();
+    try {
+      const searchTerm = input.trim();
 
-    const data = await axios(`${apiUrl}/suggest/${searchTerm}`);
-    const songs = data.data.data;
+      const data = await axios(`${apiUrl}/suggest/${searchTerm}`);
+      const songs = data.data.data;
 
-    console.log(songs[0].title, songs[0].id);
-    setSongs(songs);
+      console.log(songs[0].title, songs[0].id);
+      setSongs(songs);
+    } catch (err) {
+      setIsError(true);
+    }
   };
 
   const handleChange = e => {
@@ -66,7 +80,13 @@ const Home = () => {
         </div>
 
         <div className="input-div">
-          <input onChange={handleChange} type="text" name="search" />
+          <input
+            onChange={handleChange}
+            value={input}
+            type="text"
+            name="search"
+            placeholder="song name or artist name"
+          />
           <button onClick={handleSearch} className="search-btn" type="submit">
             <i className="fas fa-search icon"></i>
           </button>
@@ -85,7 +105,12 @@ const Home = () => {
             ))
           : ""}
 
-        {lyrics !== null ? <Lyrics lyrics={lyrics} /> : ""}
+        {lyrics !== null ? (
+          <Lyrics songTitle={songTitle} lyrics={lyrics} />
+        ) : (
+          ""
+        )}
+        {isError ? <ShowError /> : ""}
       </div>
     </>
   );
